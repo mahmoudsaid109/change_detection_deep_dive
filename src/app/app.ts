@@ -1,12 +1,18 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+
+import { CounterComponent } from './counter/counter.component';
+import { MessagesComponent } from './messages/messages.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  standalone: true,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+  imports: [CounterComponent, MessagesComponent],
 })
-export class App {
-  protected readonly title = signal('change_detection_deep_dive');
+export class AppComponent {
+  get debugOutput() {
+    console.log('[AppComponent] "debugOutput" binding re-evaluated.');
+    return 'AppComponent Component Debug Output';
+  }
 }
