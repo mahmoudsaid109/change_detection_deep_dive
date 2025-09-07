@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, NgZone, OnInit, signal } from '@angular/core';
 
 import { InfoMessageComponent } from '../info-message/info-message.component';
 
@@ -8,8 +8,10 @@ import { InfoMessageComponent } from '../info-message/info-message.component';
   templateUrl: './counter.component.html',
   styleUrl: './counter.component.css',
   imports: [InfoMessageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CounterComponent {
+export class CounterComponent implements OnInit {
+  private zone = inject(NgZone);
   count = signal(0);
 
   get debugOutput() {
@@ -17,8 +19,24 @@ export class CounterComponent {
     return 'Counter Component Debug Output';
   }
 
+  ngOnInit() {
+    setTimeout(() => {
+      this.count.set(0);
+    }, 4000);
+    this.zone.runOutsideAngular(()=>{
+ setTimeout(() => {
+      console.log('Outside Angular Zone');
+    }, 5000);
+    });
+  }
+ 
   onDecrement() {
-    this.count.update((prevCount) => prevCount - 1);
+    if (this.count() !== 0) {
+      this.count.update((prevCount) => prevCount - 1);
+    } else {
+      // alert("You can't decrement below 0");
+      this.count.update((prevCount) => prevCount);
+    }
   }
 
   onIncrement() {
