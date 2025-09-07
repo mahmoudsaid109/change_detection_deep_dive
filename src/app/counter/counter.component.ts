@@ -30,11 +30,9 @@ export class CounterComponent implements OnInit {
     setTimeout(() => {
       this.count.set(0);
     }, 4000);
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        console.log('Outside Angular Zone');
-      }, 5000);
-    });
+    setTimeout(() => {
+      console.log('Outside Angular Zone');
+    }, 5000);
   }
 
   onDecrement() {
